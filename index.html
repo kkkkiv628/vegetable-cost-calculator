@@ -1,0 +1,101 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>蔬菜种植成本计算器</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 620px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #f4f8f2;
+      color: #243324;
+    }
+    h1 { color: #28733c; }
+    label { display: block; margin-top: 16px; }
+    input {
+      box-sizing: border-box;
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border: 1px solid #bbb;
+      border-radius: 6px;
+    }
+    button {
+      margin-top: 22px;
+      padding: 12px 20px;
+      border: 0;
+      border-radius: 6px;
+      background: #28733c;
+      color: white;
+      cursor: pointer;
+    }
+    #result {
+      margin-top: 24px;
+      padding: 16px;
+      background: white;
+      border-radius: 8px;
+      line-height: 1.9;
+    }
+  </style>
+</head>
+<body>
+  <h1>蔬菜种植成本计算器</h1>
+  <p>输入种植面积和各项成本，计算总成本与每亩成本。</p>
+
+  <label>种植面积（亩）
+    <input id="area" type="number" min="0.01" step="any" value="10">
+  </label>
+
+  <label>种子成本（元）
+    <input id="seed" type="number" min="0" step="any" value="500">
+  </label>
+
+  <label>人工成本（元）
+    <input id="labor" type="number" min="0" step="any" value="1500">
+  </label>
+
+  <label>肥料成本（元）
+    <input id="fertilizer" type="number" min="0" step="any" value="800">
+  </label>
+
+  <label>其他成本（元）
+    <input id="other" type="number" min="0" step="any" value="300">
+  </label>
+
+  <button onclick="calculate()">计算成本</button>
+
+  <div id="result" aria-live="polite">
+    点击“计算成本”查看结果。
+  </div>
+
+  <script>
+    function calculate() {
+      const area = Number(document.getElementById("area").value);
+      const ids = ["seed", "labor", "fertilizer", "other"];
+      const costs = ids.map(id =>
+        Number(document.getElementById(id).value)
+      );
+
+      if (!Number.isFinite(area) || area <= 0 ||
+          costs.some(c => !Number.isFinite(c) || c < 0)) {
+        document.getElementById("result").textContent =
+          "请填写大于 0 的面积，并确保所有成本均为非负数。";
+        return;
+      }
+
+      const total = costs.reduce((sum, c) => sum + c, 0);
+      const perMu = total / area;
+
+      document.getElementById("result").innerHTML =
+        "<strong>计算结果</strong><br>" +
+        "总成本：" + total.toFixed(2) + " 元<br>" +
+        "每亩成本：" + perMu.toFixed(2) + " 元/亩";
+    }
+    calculate();
+  </script>
+</body>
+</html>
